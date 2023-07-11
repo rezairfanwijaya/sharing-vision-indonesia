@@ -8,8 +8,8 @@ import (
 )
 
 type IService interface {
-	Save(input InputNewArticle) (Article, int, error)
-	// GetByID(ID int) (Article, error)
+	Save(input InputNewArticle) (int, error)
+	GetByID(ID int) (Article, int, error)
 	// GetAll() ([]Article, error)
 	// Update(ID int) error
 	// Delete(ID int) error
@@ -23,22 +23,22 @@ func NewService(repoArticle IRepository) *service {
 	return &service{repoArticle}
 }
 
-func (s *service) Save(input InputNewArticle) (Article, int, error) {
+func (s *service) Save(input InputNewArticle) (int, error) {
 	// cari apakah ada title yang sama
 	articleByTitle, err := s.repoArticle.GetByTitle(input.Title)
 	if err != nil {
-		return articleByTitle, http.StatusInternalServerError, err
+		return http.StatusInternalServerError, err
 	}
 
 	// tidak boleh ada judul yang sama
 	if articleByTitle.Title == input.Title {
-		return articleByTitle, http.StatusConflict, fmt.Errorf("judul %v sudah dipakai", input.Title)
+		return http.StatusConflict, fmt.Errorf("judul %v sudah dipakai", input.Title)
 	}
 
 	// validasi status
 	isStatusValid := helper.IsStatusValid(input.Status)
 	if !isStatusValid {
-		return articleByTitle, http.StatusBadRequest, fmt.Errorf("status yang didukung hanya publish, draft atau thrash")
+		return http.StatusBadRequest, fmt.Errorf("status yang didukung hanya publish, draft atau thrash")
 	}
 
 	// binding
@@ -51,10 +51,23 @@ func (s *service) Save(input InputNewArticle) (Article, int, error) {
 	}
 
 	// save
-	newArticle, err := s.repoArticle.Save(article)
+	err = s.repoArticle.Save(article)
 	if err != nil {
-		return newArticle, http.StatusInternalServerError, err
+		return http.StatusInternalServerError, err
 	}
 
-	return newArticle, http.StatusOK, nil
+	return http.StatusOK, nil
+}
+
+func (s *service) GetByID(ID int) (Article, int, error) {
+	articleByID, err := s.repoArticle.GetByID(ID)
+	if err != nil {
+		return articleByID, http.StatusInternalServerError, err
+	}
+
+	if articleByID.ID == 0 {
+		return articleByID, http.StatusNotFound, fmt.Errorf("id %v tidak ditemukan", ID)
+	}
+
+	return articleByID, http.StatusOK, nil
 }
