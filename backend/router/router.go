@@ -14,4 +14,5 @@ func NewRouter(router *gin.Engine, dbConnection *gorm.DB) {
 	handlerArticle := handler.NewHandlerArticle(serviceArticle)
 
 	router.POST("/article", handlerArticle.Save)
+	router.GET("/article/:id", handlerArticle.GetByID)
 }
