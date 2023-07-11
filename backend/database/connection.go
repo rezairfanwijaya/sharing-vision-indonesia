@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"svid/article"
 	"svid/helper"
 
 	"gorm.io/driver/mysql"
@@ -29,11 +30,16 @@ func NewConnection(envPath string) (*gorm.DB, error) {
 		dbName,
 	)
 
+	// koneksi ke database
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return db, fmt.Errorf("gagal tersambung ke database : %v", err.Error())
 	}
 
-	return db, nil
+	// migrasi tabel
+	if err := db.AutoMigrate(&article.Article{}); err != nil {
+		return db, fmt.Errorf("gagal migrasi tabel : %v", err.Error())
+	}
 
+	return db, nil
 }
