@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 	"svid/article"
 	"svid/helper"
 
@@ -32,7 +33,7 @@ func (h *HandlerArticle) Save(c *gin.Context) {
 	}
 
 	// panggil service
-	newArticle, httpCode, err := h.articleService.Save(input)
+	httpCode, err := h.articleService.Save(input)
 	if err != nil {
 		response := helper.ResponseAPI(
 			"error",
@@ -46,7 +47,45 @@ func (h *HandlerArticle) Save(c *gin.Context) {
 	response := helper.ResponseAPI(
 		"sukses",
 		httpCode,
-		newArticle,
+		"sukses",
+	)
+	c.JSON(httpCode, response)
+}
+
+func (h *HandlerArticle) GetByID(c *gin.Context) {
+	articleID := c.Param("id")
+
+	// konversi ke int
+	articleIDNumber, err := strconv.Atoi(articleID)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			http.StatusBadRequest,
+			"id harus berupa angka dan lebih dari 0",
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// panggil service
+	articleByID, httpCode, err := h.articleService.GetByID(articleIDNumber)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			httpCode,
+			err.Error(),
+		)
+		c.JSON(httpCode, response)
+		return
+	}
+
+	// format article
+	articleByIDFormatted := article.ArticleFormatter(articleByID)
+
+	response := helper.ResponseAPI(
+		"sukses",
+		httpCode,
+		articleByIDFormatted,
 	)
 	c.JSON(httpCode, response)
 }
