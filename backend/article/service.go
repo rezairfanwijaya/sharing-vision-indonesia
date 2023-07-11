@@ -10,8 +10,8 @@ import (
 type IService interface {
 	Save(input InputNewArticle) (int, error)
 	GetByID(ID int) (Article, int, error)
+	Update(ID int, input InputNewArticle) (int, error)
 	// GetAll() ([]Article, error)
-	// Update(ID int) error
 	// Delete(ID int) error
 }
 
@@ -70,4 +70,35 @@ func (s *service) GetByID(ID int) (Article, int, error) {
 	}
 
 	return articleByID, http.StatusOK, nil
+}
+
+func (s *service) Update(ID int, input InputNewArticle) (int, error) {
+	articleByID, err := s.repoArticle.GetByID(ID)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if articleByID.ID == 0 {
+		return http.StatusNotFound, fmt.Errorf("id %v tidak ditemukan", ID)
+	}
+
+	// validasi status
+	isStatusValid := helper.IsStatusValid(input.Status)
+	if !isStatusValid {
+		return http.StatusBadRequest, fmt.Errorf("status yang didukung hanya publish, draft atau thrash")
+	}
+
+	// bind
+	articleByID.Category = input.Category
+	articleByID.Content = input.Content
+	articleByID.Status = input.Status
+	articleByID.Title = input.Title
+	articleByID.UpdateDate = time.Now()
+
+	// panggil repo
+	if err := s.repoArticle.Update(articleByID); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	return http.StatusOK, nil
 }
