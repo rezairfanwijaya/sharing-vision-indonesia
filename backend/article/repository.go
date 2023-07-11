@@ -3,7 +3,7 @@ package article
 import "gorm.io/gorm"
 
 type IRepository interface {
-	Save(article Article) (Article, error)
+	Save(article Article) error
 	GetByID(ID int) (Article, error)
 	GetByTitle(title string) (Article, error)
 	GetAll() ([]Article, error)
@@ -19,12 +19,12 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) Save(article Article) (Article, error) {
+func (r *repository) Save(article Article) error {
 	if err := r.db.Create(&article).Error; err != nil {
-		return article, err
+		return err
 	}
 
-	return article, nil
+	return nil
 }
 
 func (r *repository) GetByID(ID int) (Article, error) {
