@@ -138,3 +138,38 @@ func (h *HandlerArticle) Update(c *gin.Context) {
 	)
 	c.JSON(httpCode, response)
 }
+
+func (h *HandlerArticle) Delete(c *gin.Context) {
+	articleID := c.Param("id")
+
+	// konversi ke int
+	articleIDNumber, err := strconv.Atoi(articleID)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			http.StatusBadRequest,
+			"id harus berupa angka dan lebih dari 0",
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// panggil service
+	httpCode, err := h.articleService.Delete(articleIDNumber)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			httpCode,
+			err.Error(),
+		)
+		c.JSON(httpCode, response)
+		return
+	}
+
+	response := helper.ResponseAPI(
+		"sukses",
+		httpCode,
+		"sukses",
+	)
+	c.JSON(httpCode, response)
+}
