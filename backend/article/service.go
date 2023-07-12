@@ -11,8 +11,8 @@ type IService interface {
 	Save(input InputNewArticle) (int, error)
 	GetByID(ID int) (Article, int, error)
 	Update(ID int, input InputNewArticle) (int, error)
+	Delete(ID int) (int, error)
 	// GetAll() ([]Article, error)
-	// Delete(ID int) error
 }
 
 type service struct {
@@ -60,6 +60,11 @@ func (s *service) Save(input InputNewArticle) (int, error) {
 }
 
 func (s *service) GetByID(ID int) (Article, int, error) {
+	isIDValid, err := helper.IsIDValid(ID)
+	if !isIDValid {
+		return Article{}, http.StatusBadRequest, err
+	}
+
 	articleByID, err := s.repoArticle.GetByID(ID)
 	if err != nil {
 		return articleByID, http.StatusInternalServerError, err
@@ -73,6 +78,11 @@ func (s *service) GetByID(ID int) (Article, int, error) {
 }
 
 func (s *service) Update(ID int, input InputNewArticle) (int, error) {
+	isIDValid, err := helper.IsIDValid(ID)
+	if !isIDValid {
+		return http.StatusBadRequest, err
+	}
+
 	articleByID, err := s.repoArticle.GetByID(ID)
 	if err != nil {
 		return http.StatusInternalServerError, err
@@ -97,6 +107,28 @@ func (s *service) Update(ID int, input InputNewArticle) (int, error) {
 
 	// panggil repo
 	if err := s.repoArticle.Update(articleByID); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	return http.StatusOK, nil
+}
+
+func (s *service) Delete(ID int) (int, error) {
+	isIDValid, err := helper.IsIDValid(ID)
+	if !isIDValid {
+		return http.StatusBadRequest, err
+	}
+
+	articleByID, err := s.repoArticle.GetByID(ID)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if articleByID.ID == 0 {
+		return http.StatusNotFound, fmt.Errorf("id %v tidak ditemukan", ID)
+	}
+
+	if err := s.repoArticle.Delete(ID); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
