@@ -57,3 +57,11 @@ func GenerateErrorBinding(err error) (errorBinding []string) {
 
 	return errorBinding
 }
+
+func IsIDValid(ID int) (bool, error) {
+	if ID < 1 {
+		return false, fmt.Errorf("id harus lebih besar dari 0")
+	}
+
+	return true, nil
+}
