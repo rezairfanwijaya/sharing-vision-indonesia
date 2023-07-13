@@ -50,9 +50,8 @@ func (r *repository) FindByTitle(title string) (Article, error) {
 func (r *repository) FindAll(params ParamsGetAllArticles) ([]Article, int, error) {
 	var articles []Article
 	var totalData int64 = 0
-	const status = "publish"
 
-	if err := r.db.Limit(params.Limit).Offset(params.Offset).Order("id DESC").Where("status = ?", status).Find(&articles).Error; err != nil {
+	if err := r.db.Limit(params.Limit).Offset(params.Offset).Order("id DESC").Find(&articles).Error; err != nil {
 		return articles, int(totalData), err
 	}
 
