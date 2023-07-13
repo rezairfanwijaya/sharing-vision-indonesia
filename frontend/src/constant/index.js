@@ -1,4 +1,4 @@
-const DOMAIN = "http://localhost:8181/"
+const DOMAIN = "http://localhost:6868"
 const FAILED = 400
 const CONFLICT = 409
 const SUCCESS = 200

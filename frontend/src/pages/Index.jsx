@@ -8,7 +8,7 @@ const Index = () => {
                 <Sidebar />
             </div>
 
-            <div className="content">
+            <div className="content w-screen">
                 <main>
                     <Outlet />
                 </main>

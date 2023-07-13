@@ -4,16 +4,28 @@ import Index from './pages/Index';
 import Preview from './pages/Preview';
 import './style/style.css'
 import { Routes, Route } from 'react-router-dom';
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+//core
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import EditArticle from './pages/EditArticle';
 
 function App() {
   return (
     <div className="App px-10 py-5">
       <Routes>
         <Route
-          path={"/"}
+          path={""}
           exact
           element={<Index />}
         >
+          <Route
+            path={"/"}
+            exact
+            element={<AllPosts />}
+          />
           <Route
             path={"/posts"}
             exact
@@ -28,6 +40,11 @@ function App() {
             path={"/preview"}
             exact
             element={<Preview />}
+          />
+          <Route
+            path={"/article/:id"}
+            exact
+            element={<EditArticle/>}
           />
         </Route>
       </Routes>
