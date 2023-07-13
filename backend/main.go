@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"svid/database"
+	"svid/middleware"
 	"svid/router"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,7 @@ func main() {
 
 	// router
 	route := gin.Default()
+	route.Use(middleware.CorsMiddleware())
 	router.NewRouter(route, dbConnection)
 
 	// start server
