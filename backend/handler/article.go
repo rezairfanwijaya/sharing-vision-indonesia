@@ -173,3 +173,55 @@ func (h *HandlerArticle) Delete(c *gin.Context) {
 	)
 	c.JSON(httpCode, response)
 }
+
+func (h *HandlerArticle) GetAll(c *gin.Context) {
+	limitParam := c.Param("limit")
+	offsetParam := c.Param("offset")
+
+	// konversi ke int
+	limitNumber, err := strconv.Atoi(limitParam)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			http.StatusBadRequest,
+			"limit harus berupa angka dan lebih dari 0",
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	offsetNumber, err := strconv.Atoi(offsetParam)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			http.StatusBadRequest,
+			"offset harus berupa angka",
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	getAllArticleParams := article.ParamsGetAllArticles{
+		Limit:  limitNumber,
+		Offset: offsetNumber,
+	}
+
+	// panggil service
+	articles, httpCode, err := h.articleService.GetAll(getAllArticleParams)
+	if err != nil {
+		response := helper.ResponseAPI(
+			"error",
+			httpCode,
+			err.Error(),
+		)
+		c.JSON(httpCode, response)
+		return
+	}
+
+	response := helper.ResponseAPI(
+		"sukses",
+		httpCode,
+		articles,
+	)
+	c.JSON(httpCode, response)
+}

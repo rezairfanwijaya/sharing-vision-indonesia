@@ -12,7 +12,7 @@ type IService interface {
 	GetByID(ID int) (Article, int, error)
 	Update(ID int, input InputNewArticle) (int, error)
 	Delete(ID int) (int, error)
-	// GetAll() ([]Article, error)
+	GetAll(params ParamsGetAllArticles) (PaginationArticle, int, error)
 }
 
 type service struct {
@@ -25,7 +25,7 @@ func NewService(repoArticle IRepository) *service {
 
 func (s *service) Save(input InputNewArticle) (int, error) {
 	// cari apakah ada title yang sama
-	articleByTitle, err := s.repoArticle.GetByTitle(input.Title)
+	articleByTitle, err := s.repoArticle.FindByTitle(input.Title)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -65,7 +65,7 @@ func (s *service) GetByID(ID int) (Article, int, error) {
 		return Article{}, http.StatusBadRequest, err
 	}
 
-	articleByID, err := s.repoArticle.GetByID(ID)
+	articleByID, err := s.repoArticle.FindByID(ID)
 	if err != nil {
 		return articleByID, http.StatusInternalServerError, err
 	}
@@ -83,7 +83,7 @@ func (s *service) Update(ID int, input InputNewArticle) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	articleByID, err := s.repoArticle.GetByID(ID)
+	articleByID, err := s.repoArticle.FindByID(ID)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -119,7 +119,7 @@ func (s *service) Delete(ID int) (int, error) {
 		return http.StatusBadRequest, err
 	}
 
-	articleByID, err := s.repoArticle.GetByID(ID)
+	articleByID, err := s.repoArticle.FindByID(ID)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -133,4 +133,36 @@ func (s *service) Delete(ID int) (int, error) {
 	}
 
 	return http.StatusOK, nil
+}
+
+func (s *service) GetAll(params ParamsGetAllArticles) (PaginationArticle, int, error) {
+	var paginataionArticle PaginationArticle
+
+	if params.Limit < 1 {
+		return paginataionArticle, http.StatusBadRequest, fmt.Errorf("limit harus lebih dari 0")
+	}
+
+	if params.Offset < 0 {
+		return paginataionArticle, http.StatusBadRequest, fmt.Errorf("limit harus lebih dari sama dengan 0")
+	}
+
+	allArticles, totalData, err := s.repoArticle.FindAll(params)
+	if err != nil {
+		return paginataionArticle, http.StatusOK, err
+	}
+
+	// jika data kosong
+	if len(allArticles) == 0 {
+		return PaginationArticle{
+			Limit:     params.Limit,
+			TotalData: 0,
+			Articles:  allArticles,
+		}, http.StatusOK, nil
+	}
+
+	paginataionArticle.TotalData = totalData
+	paginataionArticle.Articles = allArticles
+	paginataionArticle.Limit = params.Limit
+
+	return paginataionArticle, http.StatusOK, nil
 }

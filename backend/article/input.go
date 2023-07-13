@@ -6,3 +6,8 @@ type InputNewArticle struct {
 	Category string `json:"category" binding:"required,min=3"`
 	Status   string `json:"status" binding:"required"`
 }
+
+type ParamsGetAllArticles struct {
+	Limit  int
+	Offset int
+}

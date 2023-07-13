@@ -17,4 +17,5 @@ func NewRouter(router *gin.Engine, dbConnection *gorm.DB) {
 	router.GET("/article/:id", handlerArticle.GetByID)
 	router.PUT("/article/:id", handlerArticle.Update)
 	router.DELETE("/article/:id", handlerArticle.Delete)
+	router.GET("/articles/:limit/:offset", handlerArticle.GetAll)
 }
