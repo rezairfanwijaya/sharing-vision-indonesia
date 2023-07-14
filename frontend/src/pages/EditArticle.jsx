@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { DOMAIN, SUCCESS } from "../constant"
+import { BAD_REQUEST, DOMAIN, NOT_FOUND, SUCCESS } from "../constant"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Textarea, Label, TextInput } from 'flowbite-react';
@@ -27,6 +27,9 @@ const EditArticle = () => {
             .then(data => {
                 if (data.meta.status === SUCCESS) {
                     setArticle(data.data)
+                    setTitle(data.data.title)
+                    setContent(data.data.content)
+                    setCategory(data.data.category)
                 } else {
                     MySwal.fire({
                         position: 'center',
@@ -51,8 +54,57 @@ const EditArticle = () => {
         }
     }
 
-    const UpdateArticle = () => {
-        console.log({ article })
+    const isChanged = () => {
+        if (title === "" && content === "" && category === "") {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const UpdateArticle = (e) => {
+        e.preventDefault()
+
+        let articleUpdated = {
+            title: title,
+            content: content,
+            category: category,
+            status: status
+        }
+
+
+        fetch(DOMAIN + `/article/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(articleUpdated)
+        }).then(res => { return res.json() })
+            .then(data => {
+                if (data.meta.status === SUCCESS) {
+                    MySwal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: "Artikel berhasil diedit",
+                        showConfirmButton: true,
+                    })
+                } else if (data.meta.status === NOT_FOUND) {
+                    MySwal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: "Artikel tidak ditemukan",
+                        showConfirmButton: true,
+                    })
+                } else if (data.meta.status === BAD_REQUEST) {
+                    MySwal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: `${data.data}`,
+                        showConfirmButton: true,
+                    })
+                }
+            })
+
     }
 
     useEffect(() => {
@@ -71,7 +123,7 @@ const EditArticle = () => {
                         />
                     </div>
                     <TextInput
-                        value={article && article.title}
+                        defaultValue={article && article.title}
                         required={true}
                         type="text"
                         onChange={(e) => setTitle(e.target.value)}
@@ -86,7 +138,8 @@ const EditArticle = () => {
                     <Textarea
                         required={true}
                         rows={10}
-                        value={article.content}
+                        defaultValue={article.content}
+                        onChange={(e) => setContent(e.target.value)}
                     />
                 </div>
                 <div>
@@ -96,9 +149,10 @@ const EditArticle = () => {
                         />
                     </div>
                     <TextInput
-                        value={article.category}
+                        defaultValue={article.category}
                         required={true}
                         type="text"
+                        onChange={(e) => setCategory(e.target.value)}
                     />
                 </div>
                 <div>
@@ -133,7 +187,7 @@ const EditArticle = () => {
 
                 <Button type="submit" className="flex justify-center">
                     <div className="text">
-                        Submit
+                        Update
                     </div>
                 </Button>
             </form>

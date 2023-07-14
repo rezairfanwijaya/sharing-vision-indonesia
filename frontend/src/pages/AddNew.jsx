@@ -52,7 +52,7 @@ const AddNew = () => {
                         text: "Artikel berhasil dibuat",
                         showConfirmButton: true,
                     })
-                } else if (data.meta.status === FAILED) {
+                } else if (data.meta.status === BAD_REQUEST) {
                     MySwal.fire({
                         position: 'center',
                         icon: 'error',
