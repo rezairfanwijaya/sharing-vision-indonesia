@@ -41,5 +41,10 @@ func NewConnection(envPath string) (*gorm.DB, error) {
 		return db, fmt.Errorf("gagal migrasi tabel : %v", err.Error())
 	}
 
+	// migrasi article
+	if err := migrationArticle(db); err != nil {
+		return db, fmt.Errorf("gagal migrasi artikel : %v", err.Error())
+	}
+
 	return db, nil
 }
