@@ -59,8 +59,8 @@ DATABASE_NAME = "article"
 ##### Terdapat executable file bernama `main.exe` dan jalankan file tersebut sehingga terbuka terminal. Jangan menutup terminal selama program dijalankan.
 
 
-![tutor1](https://user-images.githubusercontent.com/87264553/227724073-3f2d6a94-5de9-4461-9f65-4d49ef1dc099.png)
-![tutor2](https://user-images.githubusercontent.com/87264553/227724108-cd45bc91-7538-4de4-a849-3a94830488e4.png)
+![main file](image/sample/main%20file.png)
+![server](image/sample/terminal%20server.png)
 
 Ketika server berhasil dijalankan maka akan dibuatkan tabel artikel secara otomatis di database dengan sample sejumlah tiga artikel.
 
