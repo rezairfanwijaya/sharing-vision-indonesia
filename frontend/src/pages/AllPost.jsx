@@ -137,7 +137,7 @@ const AllPosts = () => {
             <DataTable
                 value={articleToShow}
                 emptyMessage="Tidak ada data articles"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} alumni"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} articles"
                 dataKey="id"
                 paginator
                 rows={limit}
