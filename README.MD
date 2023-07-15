@@ -1,6 +1,6 @@
 # Simple Article Management
 
-Simple article management merupakan website sederhana yang digunakan untuk memange artikel dengan sangat mudah. Pengguna bisa membuat arikel, mengedit dan juga melihat list artikel dengan status artikel `Publish` atua `Draft` ataupun `Trash`. Berikut merupakan persayaratan untuk menjalankan aplikasi di dalam environtment lokal anda.
+Simple article management merupakan website sederhana yang digunakan untuk mengatur artikel dengan sangat mudah. Pengguna bisa membuat arikel, mengedit dan juga melihat list artikel dengan status artikel `Publish` atau `Draft` ataupun `Trash`. Berikut merupakan persayaratan untuk menjalankan aplikasi di dalam environtment lokal anda.
 
 ## Requirements
 - [Golang ^1.18](https://go.dev/dl/)
@@ -21,7 +21,7 @@ Berikut merupakan teknologi yang dipakai dalam aplikasi ini
 - [Flowbite ^1.7.0](https://flowbite.com)
 - [Tailwind](https://tailwindcss.com)
 
-Untuk dapat menjalankan program ini dapat mengikuti intruksi berikut
+Untuk dapat menjalankan program ini dapat mengikuti intsruksi berikut
 
 ## Run Locally For Setup Server (Backend)
 
