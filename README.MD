@@ -55,8 +55,6 @@ DATABASE_PORT = "3306"
 DATABASE_NAME = "article"
 ```
 
-#### [API DOCS](https://documenter.getpostman.com/view/11940636/2s946cfuJE)
-
 #### Run application
 ##### Terdapat executable file bernama `main.exe` dan jalankan file tersebut sehingga terbuka terminal. Jangan menutup terminal selama program dijalankan.
 
@@ -85,4 +83,7 @@ Ketika server berhasil dijalankan maka akan dibuatkan tabel artikel secara otoma
 ![halaman utama](image/sample/halaman%20utama.png)
 ![halaman update](image/sample/halaman%20update.png)
 ![halaman preview](image/sample/halaman%20preview.png)
+
+## API DOCUMENTATION
+#### [POSTMAN](https://documenter.getpostman.com/view/11940636/2s946cfuJE)
 
