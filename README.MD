@@ -80,5 +80,7 @@ Ketika server berhasil dijalankan maka akan dibuatkan tabel artikel secara otoma
 ```bash
   npm start
 ```
-![tutor3](https://user-images.githubusercontent.com/87264553/227725765-c979ec7b-4deb-47dd-b8e4-603bfc34a6ae.png)
+![halaman utama](image/sample/halaman%20utama.png)
+![halaman update](image/sample/halaman%20update.png)
+![halaman preview](image/sample/halaman%20preview.png)
 
